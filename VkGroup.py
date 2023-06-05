@@ -1,21 +1,20 @@
 import requests
 
 class VkApp:
-
     def __init__(self, token):
         self.params = {
-            'access_token' : token,
-            'v' : 5.131
+            'access_token': token,
+            'v': 5.131
         }
 
-    def get_photos_info(self, id_vk, count = 5, album_id = 'profile'):
+    def get_photos_info(self, id_vk, count=5, album_id='profile'):
         url = 'https://api.vk.com/method/photos.get'
         params = {
             'owner_id': id_vk,
             'album_id': album_id,
             'count': count,
             'rev': 1,
-            'extended' : 1,
+            'extended': 1,
             **self.params
         }
         response = requests.get(url, params=params)
