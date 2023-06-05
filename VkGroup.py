@@ -2,68 +2,36 @@ import requests
 
 class VkApp:
 
-    def __init__(self, token, version = 5.131):
+    def __init__(self, token):
         self.params = {
             'access_token' : token,
             'v' : 5.131
         }
 
-    def get_info_users(self,id):
-        url = 'https://api.vk.com/method/users.get'
-        params = {
-            'user_ids' : id,
-            'fields' : 'city,country,sex,site,about,bdate,counrets',
-            **self.params
-        }
-        responce = requests.get(url, params=params)
-        data = responce.json()
-        return data
-
-    def groups_search(self, text):
-        url = 'https://api.vk.com/method/groups.search'
-        params = {
-            'q' : text,
-            'sort' : 6,
-            'count' : 5,
-            **self.params
-        }
-        responce = requests.get(url, params=params)
-        data = responce.json()
-        return data
-
-    def get_docs(self):
-        url = 'https://api.vk.com/method/docs.get'
-        params ={
-            'count' : 10,
-            **self.params
-        }
-        responce = requests.get(url, params=params)
-        data = responce.json()
-        return data
-
-    def get_photos(self):
+    def get_photos_info(self, id_vk, count = 5, album_id = 'profile'):
         url = 'https://api.vk.com/method/photos.get'
         params = {
-            'owner_id' : -33858187,
-            'album_id' : 'wall',
-            'count' : 1000,
-            'rev' : 1,
+            'owner_id': id_vk,
+            'album_id': album_id,
+            'count': count,
+            'rev': 1,
+            'extended' : 1,
             **self.params
         }
-        response = requests.get(url,params=params)
+        response = requests.get(url, params=params)
         data = response.json()
-        print(data['response']['count'])
         list_dict = data['response']['items']
-        list_links = []
+        dict_links = {}
         for dict in list_dict:
             list_sizes_dict = dict['sizes']
             link_zero = list_sizes_dict[0]['url']
             height_zero = list_sizes_dict[0]['height']
+            width_zero = list_sizes_dict[0]['width']
             for sizes in list_sizes_dict:
                 height = sizes['height']
                 if height > height_zero:
                     height_zero = height
+                    width_zero = sizes['width']
                     link_zero = sizes['url']
-            list_links.append(link_zero)
-
-        return list_links
+            dict_links[link_zero] = (dict['likes']['count'], dict['date'], f'{height_zero}*{width_zero}')
+        return dict_links

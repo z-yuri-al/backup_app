@@ -1,14 +1,17 @@
 from YaUploader import YandexUploader
 from VkGroup import VkApp
-from download_file import download_photo_to_yandex
+from download_file import download_photo_to_ya
+
+from pprint import pprint
 
 if __name__ == '__main__':
-    with open('token_vk.txt') as token_file_vk, open('token_yandex.txt') as token_file_yandex:
+    with open('token_vk.txt') as token_file_vk:
         token_vk = token_file_vk.read()
-        token_yandex = token_file_yandex.read()
+token_yandex = input('Введите токен с полигона Яндекс Диска')
+id_vk = input('Введите id пользователя ВК')
 
-    vk = VkApp(token_vk)
-    ya =YandexUploader(token_yandex)
+vk = VkApp(token_vk)
+ya =YandexUploader(token_yandex)
 
-    list_links = vk.get_photos()
-    download_photo_to_yandex(list_links, yandex_client=ya)
+dict_links = vk.get_photos_info(id_vk=id_vk)
+download_photo_to_ya(dict_links,ya)

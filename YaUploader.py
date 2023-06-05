@@ -15,7 +15,7 @@ class YandexUploader:
         url_ya = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
         headers = self.get_headers()
         params = {
-            'path' : file_name,
+            'path' : f'photo_vk/{file_name}',
             'url' : url,
         }
         responce = requests.post(url_ya, headers=headers, params=params)
